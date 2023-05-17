@@ -131,3 +131,88 @@ ax.set_xlabel('Y_Previsto', fontsize=14)
 ax.set_ylabel('Resíduosˆ2', fontsize=14)
 ax
 # %%
+# Coeficiente de determinação R2
+sqe = dataset.Residuos.apply(lambda u: u**2).sum()
+sqe
+# %%
+# Obtendo a soma dos quadrados residuals pelo statsmodel
+regressao_linear.ssr
+# %%
+# Soma dos quadrados total SQT
+sqt = dataset.Y.apply(lambda y: (y - dataset.Y.mean())**2).sum()
+sqt
+# %%
+# Soma dos quadrados da regressão SQR
+sqr = dataset.Y_previsto.apply(lambda y: (y - dataset.Y.mean())**2).sum()
+sqr
+# %%
+# Obtendo SQR pelo statsmodel
+regressao_linear.ess
+# %%
+# Obtendo o R2
+sqr/sqt
+# %%
+# Obtendo o R2 pelo statsmodel
+regressao_linear.rsquared
+# %%
+# Obtendo o R2 pela correlação
+0.998395**2
+# %%
+# Testes aplicados a modelos de regressão
+print(regressao_linear.summary())
+# %%
+# Calculando o erro quadrádico médio
+n = len(df)
+eqm = sqe / (n-2)
+eqm
+  # %%
+# Calculando EQM pelo Statsmodel
+eqm = regressao_linear.mse_resid
+eqm
+# %%
+# Teste de hipótese para nulidade do coeficiente angular
+# Calculando s
+s = np.sqrt(regressao_linear.mse_resid)
+s
+# %%
+# Calculando a ∑(x1 - x2)2
+soma_desvio = dataset.X.apply(lambda x: (x - dataset.X.mean())**2).sum()
+soma_desvio
+# %%
+s_beta_2 = s / np.sqrt(soma_desvio)
+s_beta_2
+# %%
+from scipy.stats import t as t_student
+# %%
+confianca = 0.95
+significancia = 1 - confianca
+# %%
+graus_de_liberdade = regressao_linear.df_resid
+graus_de_liberdade
+# %%
+probabilidade = (0.5 + (confianca / 2))
+probabilidade
+# %%
+t_alpha_2 = t_student.ppf(probabilidade,graus_de_liberdade)
+t_alpha_2
+# %%
+t = (beta_2 - 0) / s_beta_2
+t 
+# %%
+regressao_linear.tvalues[1]
+# %%
+t <= t_alpha_2
+# %%
+t >= t_alpha_2
+# %%
+# Rejeitar H0 se o valor P< a
+p_valor = 2 * (t_student.sf(t, graus_de_liberdade))
+p_valor
+# %%
+p_valor = regressao_linear.pvalues[1] 
+p_valor
+# %%
+p_valor <= significancia
+# %%
+print(regressao_linear.summary())
+# %%
