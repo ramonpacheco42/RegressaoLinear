@@ -214,5 +214,88 @@ p_valor
 # %%
 p_valor <= significancia
 # %%
-print(regressao_linear.summary())
+print(regressao_linear.summary())   
 # %%
+# Teste F -> Teste para multiparametros
+regressao_linear.mse_model
+# %%
+regressao_linear.mse_resid
+# %%
+regressao_linear.mse_model / regressao_linear.mse_resid
+# %%
+# Outra forma de obter estatistica F
+regressao_linear.fvalue
+# %%
+# Obtendo o p-valor
+regressao_linear.f_pvalue
+# %%
+# Outros Testes
+# Omnibus
+from scipy.stats import normaltest
+statistic, p_Valor = normaltest(dataset.Residuos)
+# %%
+# Como o valor é menor de 0.05 rejeitamos a hipotese nula, o que quer dizer que o dataframe
+# Não se conporta como uma distribuição normal.
+p_valor <= 0.05
+# %%
+from scipy.stats import probplot
+import matplotlib.pyplot as plt
+(_,(_,_,_)) = probplot(dataset.Residuos, plot=plt)
+# %%
+from sklearn.preprocessing import StandardScaler
+# Crie uma instância do StandardScaler
+scaler = StandardScaler()
+
+# Ajuste e transforme os dados
+dados_normalizados = scaler.fit_transform(dataset)
+# %%
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+
+# Transforme a matriz bidimensional em um array unidimensional
+dados_unidimensionais = dados_normalizados.flatten()
+
+(_,(_,_,_)) = probplot(dados_unidimensionais, plot=plt)
+# %%
+import matplotlib.pyplot as plt
+# Plote o histograma dos dados unidimensionais
+plt.hist(dados_unidimensionais, bins=10)
+plt.xlabel('Valores')
+plt.ylabel('Frequência')
+plt.title('Histograma dos dados unidimensionais')
+plt.show()
+# %%
+dados.Altura.hist(bins=50)
+# %%
+(_,(_,_,_)) = probplot(dados.Altura, plot=plt)
+# %%
+# Verificando a simetria
+from scipy.stats import skew
+S = skew(dataset.Residuos)
+S
+# %%
+# Verificando a Curtose
+from scipy.stats import kurtosis
+C = 3 + kurtosis(dataset.Residuos)
+C
+# %%
+# Teste de Jarque-Bera (Statsmodels)
+n = len(dataset)
+JB = (n/6.) * (S ** 2 + (1/4.)* (C-3)**2)
+JB
+# %%
+# Teste de Jarque-Bera Verificando se é uma distribuição normal. 
+from scipy.stats import chi2
+p_valor = chi2.sf(JB,2)
+p_valor
+# %%
+p_valor <= 0.05
+# %%
+n = len(dataset)
+JB = (n - 1 /6.) * (S ** 2 + (1/4.)* (C-3)**2)
+JB
+# %%
+p_valor = chi2.sf(JB,2)
+p_valor
+# %%
+p_valor <= 0.05
